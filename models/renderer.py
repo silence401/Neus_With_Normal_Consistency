@@ -275,6 +275,9 @@ class NeuSRenderer:
         p_jitter = prev_cdf_jitter - next_cdf_jitter
         c_jitter = prev_cdf_jitter
 
+        print("p", p.shape)
+        print("p_j", p_jitter.shape)
+
         alpha = ((p + 1e-5) / (c + 1e-5)).reshape(batch_size, n_samples).clip(0.0, 1.0)
 
         alpha_jitter = ((p_jitter + 1e-5) / (c_jitter + 1e-5)).reshape(batch_size, n_samples).clip(0.0, 1.0)
