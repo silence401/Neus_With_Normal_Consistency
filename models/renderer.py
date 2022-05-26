@@ -293,12 +293,12 @@ class NeuSRenderer:
             sampled_color = sampled_color * inside_sphere[:, :, None] +\
                             background_sampled_color[:, :n_samples] * (1.0 - inside_sphere)[:, :, None]
             sampled_color = torch.cat([sampled_color, background_sampled_color[:, n_samples:]], dim=1)
-
+        print("alpha", alpha.shape)
         weights = alpha * torch.cumprod(torch.cat([torch.ones([batch_size, 1]), 1. - alpha + 1e-7], -1), -1)[:, :-1]
         weights_sum = weights.sum(dim=-1, keepdim=True)
         print("alpha_jitter", alpha_jitter.shape)
         print(torch.cumprod(torch.cat([torch.ones([batch_size, 1]), 1. - alpha + 1e-7], -1), -1)[:, :-1].shape)
-        weights_jitter = alpha_jitter *  torch.cumprod(torch.cat([torch.ones([batch_size, 1]), 1. - alpha + 1e-7], -1), -1)[:, :-1]
+        weights_jitter = alpha_jitter *  torch.cumprod(torch.cat([torch.ones([batch_size, 1]), 1. - alpha_jitter + 1e-7], -1), -1)[:, :-1]
         
         color = (sampled_color * weights[:, :, None]).sum(dim=1)
         normal = (gradients * weights[:, :, None]).sum(dim=1) 
