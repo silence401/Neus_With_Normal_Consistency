@@ -215,8 +215,9 @@ class NeuSRenderer:
         print(rays_o.shape)
         print(torch.normal(mean=0, std=0.01, size=rays_o.shape, device=rays_o.device).shape)
         print(rays_d.shape)
-        #rays_o_jitter = rays_o[:, None, :] + torch.normal(mean=0, std=0.01, size=rays_o.shape, device=rays_o.device)
-        #pts_jitter = rays_o_jitter[:, None, :] + rays_d[:, None, :] * mid_z_vals[..., :, None] 
+        rays_o_jitter = rays_o[:, None, :] + torch.normal(mean=0, std=0.01, size=rays_o.shape, device=rays_o.device)
+        print(rays_o_jitter.shape)
+        pts_jitter = rays_o_jitter[:, None, :] + rays_d[:, None, :] * mid_z_vals[..., :, None] 
 
         pts = rays_o[:, None, :] + rays_d[:, None, :] * mid_z_vals[..., :, None]  # n_rays, n_samples, 3
         dirs = rays_d[:, None, :].expand(pts.shape)
