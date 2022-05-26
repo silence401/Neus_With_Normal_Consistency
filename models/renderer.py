@@ -231,7 +231,7 @@ class NeuSRenderer:
         feature_vector = sdf_nn_output[:, 1:]
 
         sdf_nn_output_jitter = sdf_network(pts_jitter)
-        sdf_jitter = sdf_nn_output_jitter[:, 1:]
+        sdf_jitter = sdf_nn_output_jitter[:, :1]
 
 
         gradients = sdf_network.gradient(pts).squeeze()
