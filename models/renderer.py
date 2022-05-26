@@ -262,7 +262,7 @@ class NeuSRenderer:
         next_cdf = torch.sigmoid(estimated_next_sdf * inv_s)
 
         prev_cdf_jitter = torch.sigmoid(estimated_prev_sdf_jitter * inv_s)
-        next_cdf_jitter = torch.sigmoid(estimated_next_sdf_jitter 8 inv_s)
+        next_cdf_jitter = torch.sigmoid(estimated_next_sdf_jitter * inv_s)
 
 
         p = prev_cdf - next_cdf
