@@ -212,6 +212,8 @@ class NeuSRenderer:
         mid_z_vals = z_vals + dists * 0.5
 
         # Section midpoints
+        print(rays_o.shape)
+        print(torch.normal(mean=0, std=0.01, size=rays_o.shape, device=rays_o.device).shape)
         rays_o_jitter = rays_o[:, None, :] + torch.normal(mean=0, std=0.01, size=rays_o.shape, device=rays_o.device)
         pts_jitter = rays_o_jitter[:, None, :] + rays_d[:, None, :] * mid_z_vals[..., :, None] 
 
