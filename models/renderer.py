@@ -296,6 +296,8 @@ class NeuSRenderer:
 
         weights = alpha * torch.cumprod(torch.cat([torch.ones([batch_size, 1]), 1. - alpha + 1e-7], -1), -1)[:, :-1]
         weights_sum = weights.sum(dim=-1, keepdim=True)
+        print("alpha_jitter", alpha_jitter.shape)
+        print(torch.cumprod(torch.cat([torch.ones([batch_size, 1]), 1. - alpha + 1e-7], -1), -1)[:, :-1].shape)
         weights_jitter = alpha_jitter *  torch.cumprod(torch.cat([torch.ones([batch_size, 1]), 1. - alpha + 1e-7], -1), -1)[:, :-1]
         
         color = (sampled_color * weights[:, :, None]).sum(dim=1)
