@@ -237,14 +237,14 @@ class NeuSRenderer:
         gradients = sdf_network.gradient(pts).squeeze()
         sampled_color = color_network(pts, gradients, dirs, feature_vector).reshape(batch_size, n_samples, 3)
 
-        gradients_jitter = sdf_network.gradient(pts_jitter)
+        gradients_jitter = sdf_network.gradient(pts_jitter).squeeze()
 
 
         inv_s = deviation_network(torch.zeros([1, 3]))[:, :1].clip(1e-6, 1e6)           # Single parameter
         inv_s = inv_s.expand(batch_size * n_samples, 1)
 
         true_cos = (dirs * gradients).sum(-1, keepdim=True)
-        true_cos_jitter = (dirs * gradients_jitter.squeeze()).sum(-1, keepdim=True)
+        true_cos_jitter = (dirs * gradients_jitter).sum(-1, keepdim=True)
 
 
         # "cos_anneal_ratio" grows from 0 to 1 in the beginning training iterations. The anneal strategy below makes
@@ -304,7 +304,7 @@ class NeuSRenderer:
         
         color = (sampled_color * weights[:, :, None]).sum(dim=1)
         normal = (gradients.reshape(batch_size, n_samples, 3) * weights_insphere[:, :, None]).sum(dim=1) 
-        normal_jitter = (gradients_jitter * weights_jitter[:, :, None]).sum(dim=1)
+        normal_jitter = (gradients_jitter.reshape(batch_size, n_samples, 3) * weights_jitter[:, :, None]).sum(dim=1)
  
         normal = normal / torch.linalg.norm(normal, dim = 1)
         normal_jitter = normal_jitter /torch.linalg.norm(normal_jitter, dim=1)
