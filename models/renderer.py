@@ -279,6 +279,7 @@ class NeuSRenderer:
         print("p_j", p_jitter.shape)
 
         alpha = ((p + 1e-5) / (c + 1e-5)).reshape(batch_size, n_samples).clip(0.0, 1.0)
+        alpha_insphere = alpha.clone()
 
         alpha_jitter = ((p_jitter + 1e-5) / (c_jitter + 1e-5)).reshape(batch_size, n_samples).clip(0.0, 1.0)
 
@@ -299,9 +300,10 @@ class NeuSRenderer:
         print("alpha_jitter", alpha_jitter.shape)
         print(torch.cumprod(torch.cat([torch.ones([batch_size, 1]), 1. - alpha + 1e-7], -1), -1)[:, :-1].shape)
         weights_jitter = alpha_jitter *  torch.cumprod(torch.cat([torch.ones([batch_size, 1]), 1. - alpha_jitter + 1e-7], -1), -1)[:, :-1]
+        weights_insphere = alpha_insphere * torch.cumprod(torch.cat([torch.ones([batch_size, 1]), 1. - alpha + 1e-7], -1), -1)[:, :-1]
         
         color = (sampled_color * weights[:, :, None]).sum(dim=1)
-        normal = (gradients * weights[:, :, None]).sum(dim=1) 
+        normal = (gradients.reshape(batch_size, n_samples, 3) * weights_insphere[:, :, None]).sum(dim=1) 
         normal_jitter = (gradients_jitter * weights_jitter[:, :, None]).sum(dim=1)
  
         normal = normal / torch.linalg.norm(normal, dim = 1)
