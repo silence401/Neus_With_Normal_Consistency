@@ -237,7 +237,7 @@ class NeuSRenderer:
         gradients = sdf_network.gradient(pts).squeeze()
         sampled_color = color_network(pts, gradients, dirs, feature_vector).reshape(batch_size, n_samples, 3)
 
-        gradients_jitter = sdf_network.gradient(pts_jitter).squeeze()
+        gradients_jitter = sdf_network.gradient(pts_jitter)
 
 
         inv_s = deviation_network(torch.zeros([1, 3]))[:, :1].clip(1e-6, 1e6)           # Single parameter
