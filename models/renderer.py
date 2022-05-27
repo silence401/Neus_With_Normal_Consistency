@@ -244,7 +244,7 @@ class NeuSRenderer:
         inv_s = inv_s.expand(batch_size * n_samples, 1)
 
         true_cos = (dirs * gradients).sum(-1, keepdim=True)
-        true_cos_jitter = (dirs * gradients_jitter).sum(-1, keepdim=True)
+        true_cos_jitter = (dirs * gradients_jitter.squeeze()).sum(-1, keepdim=True)
 
 
         # "cos_anneal_ratio" grows from 0 to 1 in the beginning training iterations. The anneal strategy below makes
