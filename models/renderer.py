@@ -305,7 +305,8 @@ class NeuSRenderer:
         color = (sampled_color * weights[:, :, None]).sum(dim=1)
         normal = (gradients.reshape(batch_size, n_samples, 3) * weights_insphere[:, :, None]).sum(dim=1) 
         normal_jitter = (gradients_jitter.reshape(batch_size, n_samples, 3) * weights_jitter[:, :, None]).sum(dim=1)
- 
+        
+        print("torch.linalg.norm(normal_jitter, dim=1)", torch.linalg.norm(normal_jitter, dim=1))
         normal = normal / torch.linalg.norm(normal, dim = 1)
         normal_jitter = normal_jitter /torch.linalg.norm(normal_jitter, dim=1)
 
