@@ -318,7 +318,7 @@ class NeuSRenderer:
                                             dim=-1) - 1.0) ** 2
         gradient_error = (relax_inside_sphere * gradient_error).sum() / (relax_inside_sphere.sum() + 1e-5)
         
-        norm_consistency_error = torch.mean((1 - torch.cos(normal, normal_jitter, -1)), dim=0)
+        norm_consistency_error = torch.mean((1 - torch.dot(normal, normal_jitter, -1)), dim=0)
         print(norm_consistency_error)
         
         return {
