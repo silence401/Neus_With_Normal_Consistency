@@ -216,7 +216,7 @@ class NeuSRenderer:
         #print(torch.normal(mean=0, std=0.01, size=rays_o.shape, device=rays_o.device).shape)
         #print(rays_d.shape)
         #jitter_std = self.jitter_network(torch.Tensor(0)).clip(0.0, 0.01)
-        rays_o_jitter = rays_o + torch.normal(mean=0, std=0.001, size=rays_o.shape, device=rays_o.device)
+        rays_o_jitter = rays_o + torch.normal(mean=0, std=0.01, size=rays_o.shape, device=rays_o.device)
         #print(rays_o_jitter.shape)
         pts_jitter = rays_o_jitter[:, None, :] + rays_d[:, None, :] * mid_z_vals[..., :, None] 
 

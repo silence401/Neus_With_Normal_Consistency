@@ -142,7 +142,7 @@ class Runner:
             loss = color_fine_loss +\
                    eikonal_loss * self.igr_weight +\
                    mask_loss * self.mask_weight +\
-                   norm_consistency_error * 2
+                   norm_consistency_error * 0.05
 
             self.optimizer.zero_grad()
             loss.backward()
