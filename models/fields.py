@@ -269,7 +269,7 @@ class SingleVarianceNetworkForJitter(nn.Module):
         self.register_parameter('variance', nn.Parameter(torch.tensor(init_val)))
         self.lin1 = nn.Linear(3, 16)
         self.lin2 = nn.Linear(16, 3)
-        self.relu == nn.ReLU()
+        self.relu = nn.ReLU()
 
     def forward(self, x):
         x = self.lin1(x)
