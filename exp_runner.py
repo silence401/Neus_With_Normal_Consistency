@@ -125,6 +125,7 @@ class Runner:
             s_val = render_out['s_val']
             cdf_fine = render_out['cdf_fine']
             gradient_error = render_out['gradient_error']
+            norm_consistency_error = render_out['norm_consistency_error']
             weight_max = render_out['weight_max']
             weight_sum = render_out['weight_sum']
 
@@ -139,7 +140,8 @@ class Runner:
 
             loss = color_fine_loss +\
                    eikonal_loss * self.igr_weight +\
-                   mask_loss * self.mask_weight
+                   mask_loss * self.mask_weight +\
+                   norm_consistency_error * 2
 
             self.optimizer.zero_grad()
             loss.backward()
@@ -157,7 +159,7 @@ class Runner:
 
             if self.iter_step % self.report_freq == 0:
                 print(self.base_exp_dir)
-                print('iter:{:8>d} loss = {} lr={}'.format(self.iter_step, loss, self.optimizer.param_groups[0]['lr']))
+                print('iter:{:8>d} loss = {} nl= {} lr={}'.format(self.iter_step, loss, norm_consistency_error, self.optimizer.param_groups[0]['lr']))
 
             if self.iter_step % self.save_freq == 0:
                 self.save_checkpoint()

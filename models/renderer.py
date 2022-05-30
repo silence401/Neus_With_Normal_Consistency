@@ -212,11 +212,11 @@ class NeuSRenderer:
         mid_z_vals = z_vals + dists * 0.5
 
         # Section midpoints
-        print(rays_o.shape)
-        print(torch.normal(mean=0, std=0.01, size=rays_o.shape, device=rays_o.device).shape)
-        print(rays_d.shape)
+        #print(rays_o.shape)
+        #print(torch.normal(mean=0, std=0.01, size=rays_o.shape, device=rays_o.device).shape)
+        #print(rays_d.shape)
         rays_o_jitter = rays_o + torch.normal(mean=0, std=0.01, size=rays_o.shape, device=rays_o.device)
-        print(rays_o_jitter.shape)
+        #print(rays_o_jitter.shape)
         pts_jitter = rays_o_jitter[:, None, :] + rays_d[:, None, :] * mid_z_vals[..., :, None] 
 
         pts = rays_o[:, None, :] + rays_d[:, None, :] * mid_z_vals[..., :, None]  # n_rays, n_samples, 3
@@ -294,11 +294,11 @@ class NeuSRenderer:
             sampled_color = sampled_color * inside_sphere[:, :, None] +\
                             background_sampled_color[:, :n_samples] * (1.0 - inside_sphere)[:, :, None]
             sampled_color = torch.cat([sampled_color, background_sampled_color[:, n_samples:]], dim=1)
-        print("alpha", alpha.shape)
+        #print("alpha", alpha.shape)
         weights = alpha * torch.cumprod(torch.cat([torch.ones([batch_size, 1]), 1. - alpha + 1e-7], -1), -1)[:, :-1]
         weights_sum = weights.sum(dim=-1, keepdim=True)
-        print("alpha_jitter", alpha_jitter.shape)
-        print(torch.cumprod(torch.cat([torch.ones([batch_size, 1]), 1. - alpha + 1e-7], -1), -1)[:, :-1].shape)
+        #print("alpha_jitter", alpha_jitter.shape)
+        #print(torch.cumprod(torch.cat([torch.ones([batch_size, 1]), 1. - alpha + 1e-7], -1), -1)[:, :-1].shape)
         weights_jitter = alpha_jitter *  torch.cumprod(torch.cat([torch.ones([batch_size, 1]), 1. - alpha_jitter + 1e-7], -1), -1)[:, :-1]
         weights_insphere = alpha_insphere * torch.cumprod(torch.cat([torch.ones([batch_size, 1]), 1. - alpha_insphere + 1e-7], -1), -1)[:, :-1]
         
@@ -319,7 +319,7 @@ class NeuSRenderer:
         gradient_error = (relax_inside_sphere * gradient_error).sum() / (relax_inside_sphere.sum() + 1e-5)
         
         norm_consistency_error = 1 - torch.dot(normal.flatten(), normal_jitter.flatten())/batch_size
-        print(norm_consistency_error)
+        #print(norm_consistency_error)
         
         return {
             'color': color,
@@ -331,7 +331,8 @@ class NeuSRenderer:
             'weights': weights,
             'cdf': c.reshape(batch_size, n_samples),
             'gradient_error': gradient_error,
-            'inside_sphere': inside_sphere
+            'inside_sphere': inside_sphere, 
+            'norm_consistency_error' : norm_consistency_error
         }
 
     def render(self, rays_o, rays_d, near, far, perturb_overwrite=-1, background_rgb=None, cos_anneal_ratio=0.0):
@@ -425,7 +426,8 @@ class NeuSRenderer:
             'gradients': gradients,
             'weights': weights,
             'gradient_error': ret_fine['gradient_error'],
-            'inside_sphere': ret_fine['inside_sphere']
+            'inside_sphere': ret_fine['inside_sphere'],
+            'norm_consistency_error': ret_fine['norm_consistency_error']
         }
 
     def extract_geometry(self, bound_min, bound_max, resolution, threshold=0.0):
