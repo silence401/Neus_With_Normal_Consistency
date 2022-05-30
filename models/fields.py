@@ -265,7 +265,7 @@ class SingleVarianceNetwork(nn.Module):
 
 class SingleVarianceNetworkForJitter(nn.Module):
     def __init__(self, init_val):
-        super(SingleVarianceNetwork, self).__init__()
+        super(SingleVarianceNetworkForJitter, self).__init__()
         self.register_parameter('variance', nn.Parameter(torch.tensor(init_val)))
         self.lin1 = nn.Linear(3, 16)
         self.lin2 = nn.Linear(16, 3)
