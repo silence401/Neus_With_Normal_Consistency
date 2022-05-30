@@ -13,7 +13,7 @@ from icecream import ic
 from tqdm import tqdm
 from pyhocon import ConfigFactory
 from models.dataset import Dataset
-from models.fields import RenderingNetwork, SDFNetwork, SingleVarianceNetwork, NeRF
+from models.fields import RenderingNetwork, SDFNetwork, SingleVarianceNetwork, NeRF, SingleVarianceNetworkForJitter
 from models.renderer import NeuSRenderer
 
 
@@ -62,6 +62,7 @@ class Runner:
         self.nerf_outside = NeRF(**self.conf['model.nerf']).to(self.device)
         self.sdf_network = SDFNetwork(**self.conf['model.sdf_network']).to(self.device)
         self.deviation_network = SingleVarianceNetwork(**self.conf['model.variance_network']).to(self.device)
+        self.jitter_network = SingleVarianceNetworkForJitter(**self.conf['model.jitter_network']).to(self.device)
         self.color_network = RenderingNetwork(**self.conf['model.rendering_network']).to(self.device)
         params_to_train += list(self.nerf_outside.parameters())
         params_to_train += list(self.sdf_network.parameters())
@@ -73,6 +74,7 @@ class Runner:
         self.renderer = NeuSRenderer(self.nerf_outside,
                                      self.sdf_network,
                                      self.deviation_network,
+                                     self.jitter_network,
                                      self.color_network,
                                      **self.conf['model.neus_renderer'])
 

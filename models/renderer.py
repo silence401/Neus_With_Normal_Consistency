@@ -76,6 +76,7 @@ class NeuSRenderer:
                  nerf,
                  sdf_network,
                  deviation_network,
+                 jitter_network,
                  color_network,
                  n_samples,
                  n_importance,
@@ -85,6 +86,7 @@ class NeuSRenderer:
         self.nerf = nerf
         self.sdf_network = sdf_network
         self.deviation_network = deviation_network
+        self.jitter_network = jitter_network
         self.color_network = color_network
         self.n_samples = n_samples
         self.n_importance = n_importance
@@ -199,6 +201,7 @@ class NeuSRenderer:
                     sample_dist,
                     sdf_network,
                     deviation_network,
+                    jitter_network,
                     color_network,
                     background_alpha=None,
                     background_sampled_color=None,
@@ -215,7 +218,7 @@ class NeuSRenderer:
         #print(rays_o.shape)
         #print(torch.normal(mean=0, std=0.01, size=rays_o.shape, device=rays_o.device).shape)
         #print(rays_d.shape)
-        rays_o_jitter = rays_o + torch.normal(mean=0, std=0.001, size=rays_o.shape, device=rays_o.device)
+        rays_o_jitter = rays_o + torch.normal(mean=0, std=0.005, size=rays_o.shape, device=rays_o.device)
         #print(rays_o_jitter.shape)
         pts_jitter = rays_o_jitter[:, None, :] + rays_d[:, None, :] * mid_z_vals[..., :, None] 
 
@@ -405,6 +408,7 @@ class NeuSRenderer:
                                     sample_dist,
                                     self.sdf_network,
                                     self.deviation_network,
+                                    self.jitter_network,
                                     self.color_network,
                                     background_rgb=background_rgb,
                                     background_alpha=background_alpha,
