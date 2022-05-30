@@ -221,8 +221,10 @@ class NeuSRenderer:
         jitter_std = self.jitter_network(rays_o).clip(0, 1)
         print("jitter_std", jitter_std.shape)
         print("rays_o", rays_o.shape)
+        print(rays_o[0])
+        print(rays_o[500])
         print(jitter_std[0])
-        print(jitter_std[1])
+        print(jitter_std[500])
         rays_o_jitter = rays_o + jitter_std
         #print(rays_o_jitter.shape)
         pts_jitter = rays_o_jitter[:, None, :] + rays_d[:, None, :] * mid_z_vals[..., :, None] 
