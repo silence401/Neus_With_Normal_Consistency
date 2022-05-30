@@ -74,7 +74,6 @@ class Runner:
         self.renderer = NeuSRenderer(self.nerf_outside,
                                      self.sdf_network,
                                      self.deviation_network,
-                                     self.jitter_network,
                                      self.color_network,
                                      **self.conf['model.neus_renderer'])
 
@@ -349,7 +348,7 @@ class Runner:
         images = []
         n_frames = 60
         for i in range(n_frames):
-            print(i)
+            #print(i)
             images.append(self.render_novel_image(img_idx_0,
                                                   img_idx_1,
                                                   np.sin(((i / n_frames) - 0.5) * np.pi) * 0.5 + 0.5,
