@@ -225,6 +225,9 @@ class NeuSRenderer:
         print(rays_o[500])
         print(jitter_std[0])
         print(jitter_std[500])
+        jitter_std2 = torch.normal(mean=0, std=0.01, size=rays_o.shape)
+        print(jitter_std2[0])
+        print(jitter_std2[500])
         rays_o_jitter = rays_o + jitter_std
         #print(rays_o_jitter.shape)
         pts_jitter = rays_o_jitter[:, None, :] + rays_d[:, None, :] * mid_z_vals[..., :, None] 
