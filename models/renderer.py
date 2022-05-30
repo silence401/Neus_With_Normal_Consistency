@@ -406,7 +406,6 @@ class NeuSRenderer:
                                     sample_dist,
                                     self.sdf_network,
                                     self.deviation_network,
-                                    self.jitter_network,
                                     self.color_network,
                                     background_rgb=background_rgb,
                                     background_alpha=background_alpha,
