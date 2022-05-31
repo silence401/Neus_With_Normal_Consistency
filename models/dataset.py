@@ -168,4 +168,55 @@ class Dataset:
     def image_at(self, idx, resolution_level):
         img = cv.imread(self.images_lis[idx])
         return (cv.resize(img, (self.W // resolution_level, self.H // resolution_level))).clip(0, 255)
-
+    def save_camera(self):
+        intrinsics_ = self.intrinsics_all.cpu().numpy()
+        pose_all_  = self.pose_all.cpu().numpy()
+        max_h_w = max(self.W, self.H)
+        for index in range(self.n_images):
+            #print('images_path: %s'%self.images_lis[index])
+            #print(self.W, self.H)
+            current_cam_path = self.images_lis[index]
+            current_cam_path = current_cam_path.replace('png', 'cam')
+            #print(current_cam_path)
+            fx = intrinsics_[index][0][0]
+            fy = intrinsics_[index][1][1]
+            cx = self.W - intrinsics_[index][0][2]
+            cy = intrinsics_[index][1][2]
+            d0 = 0.
+            d1 = 0.
+            #paspect = self.W*1.0 / self.H
+            paspect = fx/fy
+            ppx = cx/self.W
+            ppy = cy/self.H
+           # print(fx, cx, cy, ppx, ppy)
+            #pose_all_[index] = np.linalg.inv(pose_all_[index])
+            #pose_all_[index][0][0]
+            pose_all_[index][0][0] = pose_all_[index][0][0]
+            pose_all_[index][0][1] = pose_all_[index][0][1]
+            pose_all_[index][0][2] = pose_all_[index][0][2]
+            pose_all_[index][1][0] = pose_all_[index][1][0]
+            pose_all_[index][1][1] = pose_all_[index][1][1]
+            pose_all_[index][1][2] = pose_all_[index][1][2]
+            pose_all_[index][2][0] = pose_all_[index][2][0]
+            pose_all_[index][2][1] = pose_all_[index][2][1]
+            pose_all_[index][2][2] = pose_all_[index][2][2]
+            
+            
+            pose_all_[index] = np.linalg.inv(pose_all_[index])
+            tx = pose_all_[index][0][3]
+            ty = pose_all_[index][1][3]
+            tz = pose_all_[index][2][3]
+            R00 = pose_all_[index][0][0]
+            R01 = pose_all_[index][0][1]
+            R02 = pose_all_[index][0][2]
+            R10 = pose_all_[index][1][0]
+            R11 = pose_all_[index][1][1]
+            R12 = pose_all_[index][1][2]
+            R20 = pose_all_[index][2][0]
+            R21 = pose_all_[index][2][1]
+            R22 = pose_all_[index][2][2]
+            #pose_all_[index] = np.linalg.inv(pose_all_[index])
+            file = open(current_cam_path, 'w')#negetive here to trans points in neus to i need
+            file.write('%f %f %f %f %f %f %f %f %f %f %f %f\n'%(tx,ty,tz,R00,R01,R02,R10,R11,R12,R20,R21,R22))
+            file.write('%f %f %f %f %f %f\n'%(fx/max_h_w,0.0,0.0,paspect,ppx,ppy))
+            
